@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+# Models from : 
+# http://www.chris.com/ascii/joan/www.geocities.com/SoHo/7373/people.html
+# http://www.flipmytext.com/ascii/clowns.php
+
+import argparse
+import yaml
+from random import randint
+
+def main():
+  try:
+    fo = open("itclown.dat", "r")
+    file = fo.read()
+    fo.close
+    array = file.split('******')
+    max = len(array)
+  except:
+    print ("Error reading data file")
+    raise SystemExit
+  
+  parser = argparse.ArgumentParser()
+  parser.add_argument("-c", "--clown", type=int, choices=range(1,max+1), help="Clown number")
+  parser.add_argument("-t", "--text", help="Activate the clown's text",action="store_true")
+  parser.add_argument("-l", "--language", type=str, choices=["es", "en"], default="es", help="Clown's language")
+  
+  args = parser.parse_args()
+  if args.clown:
+    clown (array, max, args.clown)
+  else:
+    clown (array, max)
+  if args.text:
+    text (args.language)
+
+def text (language):
+  try:
+    with open('itclown.yaml', 'r') as f:
+      doc = yaml.load(f)
+    max = len(doc[language])
+    number = randint(0,max-1)
+    print doc[language][number]
+  except:
+    print ("Error reading text file")
+    raise SystemExit
+
+def is_number(s):
+  try:
+    float(s)
+    return True
+  except ValueError:
+    return False
+ 
+def clown(array, max, number=None):
+  try:
+    if number is None: 
+	  number = randint(0,max-1)
+    print(array[number-1])
+  except:
+    print ("something gone wrong!")
+    raise SystemExit
+
+if __name__ == "__main__":
+  main()
